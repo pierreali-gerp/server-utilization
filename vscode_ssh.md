@@ -1,4 +1,7 @@
-# Windows host with unprivileged user
+# Windows host with unprivileged users
+
+**NB:** If you have access to a Windows user with administrative rights, you don't need to set up a Linux VM to allow incoming SSH connections to the VS Code server. In that case, it suffices to install the _SSH service_ on Windows (from the official _Additional components_) and enable it at startup. Of course, VS Code must be installed too (the VS Code server will be automatically set up the first time an SSH connection is established).
+
 ## Basic functioning and initial setup (user side)
 You will connect through SSH to a Fedora VM with pre-installed Visual Studio Code. For simplicity, this VM is made reachable through a Tailscale connection, which I will share with your team soon (see instructions in the email I sent). You are administrators of the VM, meaning you can install whatever software you need on the OS yourselves, including the required Python environment. Being the operating system Fedora, you can install applications on the OS using the **dnf** package manager (`sudo dnf install ...`).
 
@@ -28,7 +31,9 @@ If you did something wrong and want to restart from the beginning, delete the cr
 conda-env remove -n <environment_name>
 ```
 
-The _requirements.txt_ file can be created through a `pip freeze > requirements.txt` command launched from the environment we want to copy. If the installation of the requirements produces errors, it is sufficient to comment (#) in the requirements file all packages showing incompatibilities with the others, one by one.
+The _requirements.txt_ file can be created through a `pip freeze > requirements.txt` command launched from the environment we want to copy. If the installation of the requirements produces errors, it is sufficient to comment (#) in the requirements file all packages showing incompatibilities with the others, one by one. This is pretty common when reproducing environments created on different OSs or with different approaches (e.g., using _venv_ instead of _conda_).
+
+Once prepared, the conda environment will be automatically detected by VS Code and become directly selectable for running code and notebooks, even when connecting to the host through SSH. To execute code using a specific conda environment, choose the "Kernel select" button on the top-right corner of the editor (after having the project folder and the script of interest opened).
 
 # Establish the connection
 The VM allows for multiple simultaneous SSH connections from the outside, meaning that members of the same team can work simultaneously using the same connection. However, remember that **each team member should work on different scripts and data to avoid writing conflicts. Thus, organize your work accordingly!**
