@@ -1,6 +1,31 @@
 ### Windows host with unprivileged user
-You will connect through SSH to a Fedora VM with pre-installed Visual Studio Code. For simplicity, this VM is made reachable through a Tailscale connection, which I will share with your team soon (see instructions in the email I just sent). You are administrators of the VM, meaning you can install whatever you need on the OS yourselves, including the required Python environment. Being the operating system Fedora, you can install applications on the OS using the **dnf** package manager (`sudo dnf install ...`). For the development of Python-based applications, the suggestion is always to rely on virtual environments (e.g., _venv_ or _conda_), once you have installed the Python version you need.
+# Basic functioning and initial setup (user side)
+You will connect through SSH to a Fedora VM with pre-installed Visual Studio Code. For simplicity, this VM is made reachable through a Tailscale connection, which I will share with your team soon (see instructions in the email I sent). You are administrators of the VM, meaning you can install whatever software you need on the OS yourselves, including the required Python environment. Being the operating system Fedora, you can install applications on the OS using the **dnf** package manager (`sudo dnf install ...`).
 
+For the development of Python-based applications, the suggestion is always to rely on virtual environments (e.g., _venv_ or _conda_). Note that _venv_ requires the desired Python version to be installed <ins>before</ins> creating the virtual environment. Besides, _venv_ does not work on Virtualbox VMs when creating the virtual environment in a folder shared between the host and the VM, due to a security vulnerability that would be introduced by _venv_ creating symlinks for the functioning of a virtual environment. Conversely, _conda_ is suggested as a better alternative to _venv_ in VMs and, more generally, in Linux systems. It is easy to install and perfectly supported by Visual Studio Code, which makes running scripts in _conda_ environments extremely simple.
+
+To prepare the development environment on the VM using _conda_, we can run the following instructions (on a terminal session opened in the VM's virtual screen or after connecting through SSH to the VM):
+```
+# Conda is contained in the default repositories of many distributions.
+# gcc is sometimes needed to install (compile) Python packages correctly when installing them with "pip".
+sudo dnf install conda gcc
+sudo dnf conda init
+
+# Log out and log in with your user.
+
+# Creating a new virtual environment and installing the Python version of interest (THERE'S NO NEED TO USE sudo WITH CONDA!)
+cd ~   #Moving to the home directory shouldn't be needed, but it ensures the virtual environment is created in the default location
+conda create -n <environment_name> python=<version_number>   #Example: conda create -n myenv python=3.13.2
+conda activate -n <environment_name>
+pip install -r requirements.txt
+
+# If you did something wrong and want to restart from the beginning, delete the created environment (see below) and reinstall it
+# following the instructions above
+conda-env remove -n <environment_name>
+```
+The _requirements.txt_ file can be created through a `pip freeze > requirements.txt` command launched from the environment we want to copy. If the installation of the requirements produces errors, it is sufficient to comment (#) in the requirements file all packages showing incompatibilities with the others, one by one.
+
+# Establish the connection
 The VM allows for multiple simultaneous SSH connections from the outside, meaning that members of the same team can work simultaneously using the same connection. However, remember that **each team member should work on different scripts and data to avoid writing conflicts. Thus, organize your work accordingly!**
 
 An easy way to connect is by downloading the "Remote SSH" extension onto your local VS Code installation. This will start up the VS Code Server installed on the VM and enable the usage of its resources to run scripts stored locally on the VM. **The credentials to log in to the VM with SSH are the same as those used for the Windows host.**
