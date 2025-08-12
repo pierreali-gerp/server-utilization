@@ -25,6 +25,8 @@ podman run -v /home/utentetest/Documents/tesi:/tf/tesi -it --rm --device nvidia.
 docker run -u $(id -u):$(id -g) -v /home/utentetest/Documents/tesi:/tf/tesi -it --rm --gpus all tensorflow/tensorflow:2.12.0-gpu
 ```
 
+> ⚠️ If `podman run` fails with an error related to the CDI manifest, this is likely because Nvidia drivers have been updated, but not the CDI manifest. To do so, launch `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`, which will overwrite the previous _nvidia.yaml_ configuration file with an updated version. After this, try to restart the container with the same command: it should work nicely (with no need to reboot).
+
 ## Run a container with CPU support only
 
 Here's the general command to run a container that leverages only the CPU and reads/writes to a host's folder using the host's user (i.e., not root). Typically, this does not work with TensorFlow containers with GPU libraries installed, but only with those with CPU-only libraries (i.e., those without the "gpu" tag).
