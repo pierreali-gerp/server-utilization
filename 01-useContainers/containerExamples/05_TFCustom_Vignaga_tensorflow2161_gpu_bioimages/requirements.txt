@@ -1,0 +1,22 @@
+numpy
+nibabel
+pydicom
+scikit-image
+scikit-learn
+tqdm
+Pillow
+pynrrd
+# glob #already in the base Python package
+PyQt5
+opencv-python
+SimpleITK
+torch
+torchvision
+pandas
+seaborn
+matplotlib
+mne
+keras_tuner
+pydot
+graphviz
+# and any other Python packages you might need

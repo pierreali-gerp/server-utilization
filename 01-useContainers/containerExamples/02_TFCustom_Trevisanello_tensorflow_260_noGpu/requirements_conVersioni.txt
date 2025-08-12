@@ -1,0 +1,12 @@
+pandas==0.25.1
+scipy
+tqdm
+mne
+PyRiemann
+scikit-learn
+matplotlib
+pathlib
+typing
+IPython
+# ...and any other Python packages you might need.
+# If we specify a version for any already installed library, this will be up/downgraded to that version.

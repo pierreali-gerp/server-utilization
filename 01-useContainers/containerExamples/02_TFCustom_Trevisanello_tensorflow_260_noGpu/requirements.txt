@@ -1,0 +1,11 @@
+pandas
+scipy
+tqdm
+mne
+PyRiemann
+scikit-learn
+matplotlib
+pathlib
+typing
+IPython
+# and any other Python packages you might need
