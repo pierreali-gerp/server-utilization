@@ -12,12 +12,14 @@ Once the Tailscale client has been installed, **ignore** the banner asking to co
 
 ---
 
-## 2. Checking the prerequisites to connect to the Headscale server of the Bastion VM
+## 2. Check the main prerequisites
 
 To connect to the Headscale server running on the Bastion VM, you need this information from your system admin:
 - The Bastion VM IP address and Headscale server listening port (or the host's IP and forwarding port, in configurations where those are used instead).
 - An _account_ that has been specifically created for you on the Headscale server running on the Bastion VM.
 - A _pre-authorized key_ associated with your Headscale account. Note that **pre-authorized keys have a validity frame (usually, 30 days) that is defined at the moment of creation and cannot be extended.** If you happen to lose your key or it expires before you can connect your devices to the Headscale server, you will need to ask the admin for a new pre-authorized key. The key is **_reusable_**, meaning you can use the same key to authenticate all the devices (PCs, smartphones, etc.) you will connect to the VM from.
+
+Eventually, remember that **your PC must be connected to Politecnico's local network to communicate with the Bastion VM.** This can be achieved either by connecting through an Ethernet cable within Politecnico's facilities or by configuring the appropriate [VPN connection](https://www.ict.polimi.it/network/vpn/). Please note that **the VPN connection is needed even if you are using _polimi-protected_ WiFi** (only the Ethernet approach enables direct connection without VPN).
 
 From your system (any OS supports the following command), check that the Bastion VM is actually reachable at the IP address provided by the system admin:
 ```
@@ -27,7 +29,7 @@ E.g.:
 ```
 ping 10.79.40.10
 ```
-If the host is unreachable, you first need to solve this problem before proceeding (e.g., check your network/VPN connection).
+If the host is unreachable, you first need to solve this issue before proceeding (e.g., check your network/VPN connection).
 
 ---
 
