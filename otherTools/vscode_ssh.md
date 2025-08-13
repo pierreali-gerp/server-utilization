@@ -1,6 +1,6 @@
 # Windows host with unprivileged users
 
-**NB:** If you have access to a Windows user with administrative rights, you don't need to set up a Linux VM to allow incoming SSH connections to the VS Code server. In that case, it suffices to install the _SSH service_ on Windows (from the official _Additional components_) and enable it at startup. Of course, VS Code must be installed too (the VS Code server will be automatically set up the first time an SSH connection is established).
+**NB:** If you have access to a Windows host (VM or workstation) with a user holding administrative rights, you don't need to set up a Linux VM to allow incoming SSH connections to the host's VS Code server. In that case, it suffices to install the _SSH service_ on Windows (from the official _Additional components_) and enable it at startup. Of course, VS Code must be installed too (the VS Code server will be automatically set up the first time an SSH connection is established).
 
 ## Basic functioning and initial setup (user side)
 You will connect through SSH to a Fedora VM with pre-installed Visual Studio Code. For simplicity, this VM is made reachable through a Tailscale connection, which I will share with your team soon (see instructions in the email I sent). You are administrators of the VM, meaning you can install whatever software you need on the OS yourselves, including the required Python environment. Being the operating system Fedora, you can install applications on the OS using the **dnf** package manager (`sudo dnf install ...`).
