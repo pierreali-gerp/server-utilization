@@ -1,0 +1,1 @@
+TO DO: Add setup and usage instructions for "Ollama" with "open-webui" (including definition of a specific "OLLAMA_MODELS" folder and SSH tunneling with "ssh -L"). Install the latter in a dedicated conda environment (avoid using containers, as on the internet it is suggested that it is more complicated).

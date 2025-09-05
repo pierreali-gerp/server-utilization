@@ -1,0 +1,1 @@
+TO DO: Add instructions about setup and usage of Conda (installation on Ubuntu requires downloading from the official website and cannot be done with "apt install conda"; on RPM-based distros, instead, "dnf install conda" should work).
