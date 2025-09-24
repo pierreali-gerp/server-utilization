@@ -54,12 +54,17 @@ After this, your connection to the Headscale server should be up and running! Tr
 ```bash
 ping <IP_of_your_VM/bastion_VM>
 ```
-For example, you can ping the IP that the bastion VM gets on that subnet:
+For example, you can ping the IP that the bastion VM gets on that subnet to verify the connection to the subnet:
 ```bash
 ping 192.168.100.2
 ```
+or connect to your VM through SSH (obviously, this one will work only if your VM is on):
+```bash
+ssh <your_username>@<IP_of_your_VM>
+ssh username@192.168.100.3
+```
 
-**Note:** The Tailscale connection to the Headscale server generally survives your system's reboots (unless you execute `tailscale logout`), thus this configuration procedure should be done only once.
+**Note:** The Tailscale connection to the Headscale server generally survives your system's reboots (unless you run `tailscale logout` or `tailscale down` from a terminal), thus this configuration procedure should be done only once.
 
 ### Troubleshooting for Windows users
 
@@ -67,7 +72,7 @@ If you have trouble connecting to the Headscale server through Tailscale (this i
 
 To do so, after setting up WSL and installing the distro of your choice (the latest Ubuntu is the suggested one, as it is more stable than others on WSL), follow the [official instructions](https://tailscale.com/download/linux) to install Tailscale on a Linux OS (the one-liner installer is highly advised!). Then, connect to the Headscale server following the instructions above and test the connection by pinging one of the VMs on the subnet.
 
-Once you are sure the connection to the Headscale server and the advertised subnet is working, you can install on the WSL distro what you need to interact with your VM. For example, as [WSL seamlessly supports executing GUI applications](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps) since June 2025, you can install NoMachine (check the updated URL for your Linux distro on [NoMachine Linux download page](https://download.nomachine.com/it/download/?id=1&platform=linux)):
+Once you are sure the connection to the Headscale server and the advertised subnet is working (e.g., by pinging the IP that the bastion VM gets on the subnet, as mentioned at the end of the previous section), you can install on the WSL distro everything you need to interact with your VM. For example, as [WSL seamlessly supports executing GUI applications](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps) since June 2025, you can install NoMachine (check the updated URL for your Linux distro on [NoMachine Linux download page](https://download.nomachine.com/it/download/?id=1&platform=linux)):
 ```bash (on WSL)
 # Move to your home's Downloads directory
 cd Downloads/
