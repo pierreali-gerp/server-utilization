@@ -22,6 +22,12 @@ ping 192.168.100.3
 ```
 If this works, it means that your VM is up and running, and you can access it using the means you prefer (e.g., SSH, NoMachine, SFTP). If the others above work, but not the last ping instruction, it's very likely that your VM is off. Depending on the specific server configuration, you might either need to ask your system admin to turn it on or connect to the Proxmox host and turn it on yourself.
 
+Keep in mind that, once you have tested that your connection to the Headscale server is working properly through the above pings, **to communicate with your VM, from now on, you only need its IP address on the subnet advertised by the Headscale server.** For example, supposing you want to SSH into your VM, whose IP address on that subnet is 192.168.100.3, you may simply run the following from a terminal on your PC:
+```bash
+ssh yourusername@192.168.100.3
+```
+Of course, a similar reasoning applies to all the other tools listed below.
+
 ---
 
 ## List of suggested tools to access and work with your VM
