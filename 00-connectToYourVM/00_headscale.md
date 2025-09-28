@@ -82,12 +82,13 @@ For example, as [WSL seamlessly supports executing GUI applications](https://lea
 cd Downloads/
 # Download the VSC installer from the website (here's the example if you have installed Ubuntu on WSL;
 # check the updated link on the instructions page above)
-wget https://go.microsoft.com/fwlink/?LinkID=760868
+wget https://go.microsoft.com/fwlink/?LinkID=760868 -O vscode_installer.deb
 # Install VSC on Ubuntu from the downloaded .deb package
-sudo apt install ./<downloaded_file_name>.deb
+sudo apt update
+sudo apt install ./vscode_installer.deb
 ```
 
-After installing VSC, start it by simply calling `code` from the WSL terminal (if it doesn't work the first time, shut down and restart your WSL distro first, as suggested at the end of the below set of instructions for NoMachine).
+After installing VSC, start it by simply typing `code` in the WSL terminal (if a prompt appears, accept to continue anyway). If this doesn't work the first time, shut down and restart your WSL distro first, as illustrated at the end of the instructions below for NoMachine.
 
 As an alternative (or in addition), you can also install and use **NoMachine** (for an overview on this tool, see [here](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/01_interactWithYourVM.md#list-of-suggested-tools-to-access-and-work-with-your-vm)) to interact with your VM from WSL:
 ```bash (on WSL)
@@ -97,6 +98,7 @@ cd Downloads/
 # https://download.nomachine.com/it/download/?id=1&platform=linux)
 wget https://web9001.nomachine.com/download/9.1/Linux/nomachine_9.1.24_6_amd64.deb
 # Install NoMachine using the just-uploaded installer (again, this applies to an Ubuntu WSL installation)
+# NB: You will be asked if you want to add VS Code's repositories during the installation process: accept!
 sudo apt-get update
 sudo apt-get install ./nomachine_9.1.24_6_amd64.deb
 ```
