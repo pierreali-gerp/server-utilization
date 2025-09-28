@@ -68,22 +68,40 @@ ssh username@192.168.100.3
 
 ### Troubleshooting for Windows users
 
-If you have trouble connecting to the Headscale server through Tailscale (this is especially likely if you were already using Tailscale before attempting this procedure), don't waste your time trying to deal with Windows' stupidity. Instead, install Tailscale and everything you need to interact with your VM on WSL (Windows Subsystem for Linux) and connect to your VM through it!
+On Windows, you may have trouble connecting to the Headscale server through Tailscale. This is especially likely **if you were already using Tailscale before** attempting this procedure or **if you are trying to reach the Headscale server for the first time by going through Politecnico's Global Protect VPN**. Regarding the latter, we verified that **first-time access certainly requires an Ethernet connection from inside Politecnico, without any VPN** (I'm still unsure about subsequent connections, to be honest). Thus, if you experience any issues connecting from Windows, the suggestion is not to waste your time trying to deal with Windows' stupidity. Instead, install Tailscale and everything you need to interact with your VM on WSL (Windows Subsystem for Linux) and connect to your VM through it!
 
 To do so, after [setting up WSL](https://learn.microsoft.com/en-us/windows/wsl/install), installing the distro of your choice (the latest Ubuntu is the suggested one, as it is more stable than others on WSL), and ensuring you have [upgraded to WSL2 and set your distro to run with it](https://learn.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2), follow the [official instructions](https://tailscale.com/download/linux) to install Tailscale on a Linux OS (the one-liner installer is highly advised!). Then, connect to the Headscale server following the instructions above and test the connection by pinging one of the VMs on the subnet.
 
-Once you are sure the connection to the Headscale server and the advertised subnet is working (e.g., by pinging the IP that the bastion VM gets on the subnet, as mentioned at the end of the previous section), you can install on the WSL distro everything you need to interact with your VM. For example, as [WSL seamlessly supports executing GUI applications](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps) since June 2025, you can install NoMachine (check the updated URL for your Linux distro on [NoMachine Linux download page](https://download.nomachine.com/it/download/?id=1&platform=linux)):
+Once you are sure the connection to the Headscale server and the advertised subnet is working (e.g., by pinging the IP that the bastion VM gets on the subnet, as mentioned at the end of the previous section), you can install on the WSL distro everything you need to interact with your VM.
+
+> ⚠️ **REMEMBER:** As you established the connection to the Headscale server through WSL, **you can only get access to your VM by passing through WSL.** In other words, you must install everything you need to interact with your VM on the Linux distro installed on WSL.
+
+For example, as [WSL seamlessly supports executing GUI applications](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps) since June 2025, you can install and run **Visual Studio Code (VSC)** to connect to the VSC server already configured on the VM (more details about this kind of connection in the VSC bullet [here](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/01_interactWithYourVM.md#list-of-suggested-tools-to-access-and-work-with-your-vm)). To install VSC on WSL, follow the [instructions](https://code.visualstudio.com/docs/setup/linux#_install-vs-code-on-linux) specific for your Linux distro. In particular, you can run the following commands from WSL's terminal to save the installer to your home's Downloads folder and perform the installation:
 ```bash (on WSL)
 # Move to your home's Downloads directory
 cd Downloads/
-# Download NoMachine from the website (here's the example if you have installed Ubuntu on WSL)
+# Download the VSC installer from the website (here's the example if you have installed Ubuntu on WSL;
+# check the updated link on the instructions page above)
+wget https://go.microsoft.com/fwlink/?LinkID=760868
+# Install VSC on Ubuntu from the downloaded .deb package
+sudo apt install ./<downloaded_file_name>.deb
+```
+
+After installing VSC, start it by simply calling `code` from the WSL terminal (if it doesn't work the first time, shut down and restart your WSL distro first, as suggested at the end of the below set of instructions for NoMachine).
+
+As an alternative (or in addition), you can also install and use **NoMachine** (for an overview on this tool, see [here](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/01_interactWithYourVM.md#list-of-suggested-tools-to-access-and-work-with-your-vm)) to interact with your VM from WSL:
+```bash (on WSL)
+# Move to your home's Downloads directory
+cd Downloads/
+# Download NoMachine from the website (here's the example if you have installed Ubuntu on WSL; check the updated URL for your distro here:
+# https://download.nomachine.com/it/download/?id=1&platform=linux)
 wget https://web9001.nomachine.com/download/9.1/Linux/nomachine_9.1.24_6_amd64.deb
 # Install NoMachine using the just-uploaded installer (again, this applies to an Ubuntu WSL installation)
 sudo apt-get update
 sudo apt-get install ./nomachine_9.1.24_6_amd64.deb
 ```
 
-Shutdown your WSL distro by running `wsl --shutdown` on PowerShell and restart it from the Start menu. Finally, run the NoMachine GUI from WSL and use it to connect to your VM:
+Shutdown your WSL distro by running `wsl --shutdown` on PowerShell and restart it through `wsl --distribution <distro_name>` (to check which distros are already installed on your system, use `wsl --list`). Finally, run the NoMachine GUI from WSL and use it to connect to your VM:
 ```bash (on WSL)
 /usr/NX/bin/nxplayer
 ```
