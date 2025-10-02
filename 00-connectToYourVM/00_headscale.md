@@ -70,7 +70,7 @@ ssh username@192.168.100.3
 
 ### Troubleshooting for Windows users
 
-On Windows, you may have trouble performing the [last step](https://github.com/pierreali-gerp/server-utilization/edit/main/00-connectToYourVM/00_headscale.md#3-set-up-the-connection-to-the-headscale-server), specifically connecting to the Headscale server through Tailscale. This is especially likely **if you were already using Tailscale before** attempting this procedure or **if you are trying to reach the Headscale server by going through Politecnico's Global Protect VPN**. Regarding the latter, I verified that **first-time access certainly requires an Ethernet connection from inside Politecnico, without any VPN** (I'm still unsure about subsequent connections, to be honest).
+On Windows, you may have trouble performing the [last step](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/00_headscale.md#3-set-up-the-connection-to-the-headscale-server), specifically connecting to the Headscale server through Tailscale. This is especially likely **if you were already using Tailscale before** attempting this procedure or **if you are trying to reach the Headscale server by going through Politecnico's Global Protect VPN**. Regarding the latter, I verified that **first-time access certainly requires an Ethernet connection from inside Politecnico, without any VPN** (I'm still unsure about subsequent connections, to be honest).
 
 Thus, if you experience any issues connecting from Windows, the suggestion is not to waste your time trying to deal with Windows' stupidity. Instead, **install Tailscale on WSL (Windows Subsystem for Linux) and connect to your VM <ins>through</ins> it!**
 
@@ -139,7 +139,7 @@ ip address show eth0
 #### b) Install the software you need on WSL directly (applicable even to GUIs)
 Given that [WSL seamlessly supports executing GUI applications](https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps) since June 2025, you can now install and run any GUI you need to interact with your VM.
 
-> 📝 Note that some GUIs may manifest graphical issues when run from WSL. In such cases, it is advisable to rely on the [previous strategy](https://github.com/pierreali-gerp/server-utilization/main/00-connectToYourVM/00_headscale.md#a-connect-to-your-vm-through-wsl-an-example-using-visual-studio-code) to run these applications whenever possible.
+> 📝 Note that some GUIs may manifest graphical issues when run from WSL. In such cases, it is advisable to rely on the [previous strategy](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/00_headscale.md#a-connect-to-your-vm-through-wsl-an-example-using-visual-studio-code) to run these applications whenever possible.
 
 ##### NoMachine
 For example, it is possible to install and run **NoMachine** (for an overview on this tool, see [here](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/01_interactWithYourVM.md#list-of-suggested-tools-to-access-and-work-with-your-vm)) to interact with your VM from WSL:
@@ -161,7 +161,7 @@ Shutdown your WSL distro by running `wsl --shutdown` on PowerShell and restart i
 ```
 
 ##### Visual Studio Code (<ins>_modality a)_</ins> is suggested for this tool; this is kept here only for the record)
-As a <ins>discouraged</ins> alternative to the [strategy documented above](https://github.com/pierreali-gerp/server-utilization/main/00-connectToYourVM/00_headscale.md#a-connect-to-your-vm-through-wsl-an-example-using-visual-studio-code), one can also install **VSC** directly on WSL to connect to the VSC server already configured on the VM. To install VSC on WSL, follow the [instructions](https://code.visualstudio.com/docs/setup/linux#_install-vs-code-on-linux) specific to your Linux distro. In particular, you can run the following commands from WSL's terminal to save the installer to your home's Downloads folder and perform the installation:
+As a <ins>discouraged</ins> alternative to the [strategy documented above](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/00_headscale.md#a-connect-to-your-vm-through-wsl-an-example-using-visual-studio-code), one could also install **VSC** directly on WSL to connect to the VSC server already configured on the VM. To install VSC on WSL, follow the [instructions](https://code.visualstudio.com/docs/setup/linux#_install-vs-code-on-linux) specific to your Linux distro. In particular, you can run the following commands from WSL's terminal to save the installer to your home's Downloads folder and perform the installation:
 ```bash (on WSL)
 # Move to your home's Downloads directory
 cd Downloads/
