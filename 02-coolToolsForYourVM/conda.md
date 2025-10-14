@@ -93,15 +93,23 @@ If your VM's operating system is Fedora or another RPM-based distribution, a pac
    conda activate <environment_name>
    ```
 
-4. **Install libraries we need on the activated environment**
+4. **Install Python libraries we need on the activated environment**:
     - One by one:
-      ```
+      ```bash
       pip install <package_name>
       ```
     - Through a requirements.txt file previously created with `pip freeze > requirements.txt`:
-      ```
+      ```bash
       pip install -r requirements.txt
       ```
+
+5. **Install the Nvidia CUDA Toolkit on the activated environment**:
+
+   **Conda is the recommended way to install the Nvidia CUDA Toolkit (NVCT) on your VM**, as it's much easier to set up and update it in a virtual environment rather than installing it directly on the guest OS. Also, note that the _Nvidia CUDA Toolkit_ is different from the more generic _CUDA libraries_, which are most commonly needed by Python applications and already included in the installed compute-oriented (i.e., _gpgpu_) Nvidia drivers. Indeed, the former are usually not required to train/apply models on frameworks as TensorFlow or PyTorch with GPU support, and they are typically requested only by applications requiring low-level access to Nvidia GPU functions. So, the advice is to install the NVCT in your Conda environment only if your application throws an error suggesting this specific package is missing. For additional details and information on how to install only certain components of the NVCT, refer to [this page](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#conda-installation).
+   ```bash
+   #NB: You can add the Nvidia CUDA Toolkit to the active Conda environment only if Python has already been installed in it (see steps above).
+   conda install cuda -c nvidia
+   ```
 
 ### Manage existing Conda environments
 1. **List the available environments**:
