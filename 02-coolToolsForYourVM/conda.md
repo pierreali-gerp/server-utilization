@@ -108,7 +108,12 @@ If your VM's operating system is Fedora or another RPM-based distribution, a pac
    **Conda is the recommended way to install the Nvidia CUDA Toolkit (NVCT) on your VM**, as it's much easier to set up and update it in a virtual environment rather than installing it directly on the guest OS. Also, note that the _Nvidia CUDA Toolkit_ is different from the more generic _CUDA libraries_, which are most commonly needed by Python applications and already included in the installed compute-oriented (i.e., _gpgpu_) Nvidia drivers. Indeed, the former are usually not required to train/apply models on frameworks as TensorFlow or PyTorch with GPU support, and they are typically requested only by applications requiring low-level access to Nvidia GPU functions. So, the advice is to install the NVCT in your Conda environment only if your application throws an error suggesting this specific package is missing. For additional details and information on how to install only certain components of the NVCT, refer to [this page](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#conda-installation).
    ```bash
    #NB: You can add the Nvidia CUDA Toolkit to the active Conda environment only if Python has already been installed in it (see steps above).
-   conda install cuda -c nvidia
+   conda install cuda=<version> -c nvidia
+   ```
+   Example:
+   ```bash
+   #If your application doesn't require a specific CUDA version, the advice is to execute "nvidia-smi" from a terminal in your VM and install in the Conda environment the same version indicated there for the "CUDA Version". This ensures no issues will arise due to mismatched versions of CUDA libraries between the OS drivers and the Conda environment.
+   conda install cuda=13.0 -c nvidia
    ```
 
 ### Manage existing Conda environments
