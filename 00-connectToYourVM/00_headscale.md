@@ -8,9 +8,11 @@ Once the Tailscale client has been installed, **ignore** the banner asking to co
 
 **Do not create a Tailscale account on the website!** You don't need it to connect to a self-hosted Headscale server, such as the one set up on B3Lab's machines.
 
-> ⚠️ If you already have a Tailscale client running and connected to your Tailscale account, you should first disconnect it before proceeding. On Windows, you can do it by right-clicking on the Tailscale icon in the notification area, selecting your account, and then _Log out_. On Linux/MAC, open a terminal and run `tailscale logout`.
+> ⚠️ If you already have a Tailscale client running and connected to your personal Tailscale account, you should either disconnect it before proceeding or use `tailscale login` in place of `tailscale up`, as instructed below.
+>
+> **If you wish to disconnect your personal account**, on Windows, you can simply right-click on the Tailscale icon in the notification area, select your account, and then _Log out_. On Linux/MAC, open a terminal and run `tailscale logout`.
 > 
-> If you wish to keep both the connections to your Tailscale account and the Headscale server ready to go, simply replace the command `tailscale up` given below with `tailscale login`. This will allow you to _switch_ between the two different Tailnets when needed, using `tailscale switch --list` to show Tailnets you are logged into and `tailscale switch "<account_name>"` to change the one you are currently using. Note that you can't be connected to two distinct Tailnets simultaneously, which is why either the `tailscale logout` or `tailscale switch` strategy is required.
+> **If you wish to keep both the connections to your Tailscale personal account and the Headscale server ready to go**, simply replace the command `tailscale up` given below with `tailscale login`. This will allow you to _switch_ between the two different Tailnets when needed, using `tailscale switch --list` to show Tailnets you are logged into and `tailscale switch "<account_name>"` to change the one you are currently using. Note that you can't be connected to two distinct Tailnets simultaneously, which is why either the `tailscale logout` or `tailscale switch` strategy is required.
 
 ---
 
@@ -18,8 +20,8 @@ Once the Tailscale client has been installed, **ignore** the banner asking to co
 
 To connect to the Headscale server running on the Bastion VM, you need this information from your system admin:
 - The Bastion VM IP address and Headscale server listening port (or the host's IP and forwarding port, in configurations where those are used instead).
-- An _account_ that has been specifically created for you on the Headscale server running on the Bastion VM.
-- A _pre-authorized key_ associated with your Headscale account. Note that **pre-authorized keys have a validity frame (usually, 30 days) that is defined at the moment of creation and cannot be extended.** If you happen to lose your key or it expires before you can connect your devices to the Headscale server, you will need to request a new pre-authorized key from the admin. The key is **_reusable_**, meaning you can use the same key to authenticate all the devices (PCs, smartphones, etc.) you will connect to the VM from.
+- An _account_ that has been specifically created for you on the Headscale server running on the Bastion VM and on your VM.
+- A _pre-authorized key_ associated with your Headscale account. Note that **pre-authorized keys have a validity frame (usually, 30 days) that is defined when the key is created and cannot be extended.** If you happen to lose your key or it expires before you can connect your devices to the Headscale server, you will need to request a new pre-authorized key from the admin. The key is **_reusable_**, meaning you can use the same key to authenticate all the devices (PCs, smartphones, etc.) you will connect to the VM from.
 
 Eventually, remember that **your PC must be connected to Politecnico's local network to communicate with the Bastion VM.** This can be achieved either by connecting through an Ethernet cable within Politecnico's facilities or by configuring the appropriate [VPN connection](https://www.ict.polimi.it/network/vpn/). Please note that **the VPN connection is needed even if you are using _polimi-protected_ WiFi** (only the Ethernet approach enables direct connection without VPN).
 
