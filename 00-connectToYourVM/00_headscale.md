@@ -309,7 +309,9 @@ ssh <a_nickname_for_your_VM>
 
 To connect any application (even those featuring GUIs) running on your Mac to the VM, a simple approach is to forward its TCP port through the SSH jump host.
 
-For example, if the NoMachine client is installed on your Mac, you can connect to the NoMachine server running on the VM by creating a tunnel for a specific port (4001) that goes from your Mac into your container and reaches the NoMachine server on the VM through the Tailscale connection. To create this tunnel, after setting the SSH jump as done above, you can simply run the following command in a macOS terminal:
+For example, if the **NoMachine** client is installed on your Mac (for an overview on this tool, see [here](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/01_interactWithYourVM.md#list-of-suggested-tools-to-access-and-work-with-your-vm)), you can connect to the NoMachine server running on the VM by creating a tunnel for a specific port (4001) that goes from your Mac into your container and reaches the NoMachine server on the VM through the Tailscale connection.
+
+To create this tunnel, after setting the SSH jump as done above, you can simply run the following command in a macOS terminal:
 
 ```bash
 ssh -fN -L 4001:127.0.0.1:4000 <a_nickname_for_your_VM>
