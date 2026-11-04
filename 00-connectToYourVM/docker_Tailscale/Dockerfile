@@ -19,9 +19,16 @@
 #	Host <a_nickname_for_your_VM>
 #	  HostName <IP_of_your_VM>
 #	  User <your_username_on_the_VM>
-#	  ProxyJump Local_TailscaleContainer	
+#	  ProxyJump Local_TailscaleContainer
+#
+# TO REACH YOUR VM THROUGH SSH FROM THE HOST, ONCE THE SSH JUMP HAS BEEN CONFIGURED:
+#	ssh <a_nickname_for_your_VM>
+#
+# TO REDIRECT CONNECTIONS TARGETING A SPECIFIC PORT (e.g., 4001, close to the default NoMachine port) FROM THE HOST TO A SPECIFIC PORT OF YOUR VM, ONCE THE SSH JUMP HAS BEEN CONFIGURED:
+#   ssh -fN -L 4001:127.0.0.1:4000 <a_nickname_for_your_VM>
 
-FROM ubuntu:24.04
+
+FROM ubuntu:26.04
 
 # Set the work directory inside the container for the build
 WORKDIR /myscripts

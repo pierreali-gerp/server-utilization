@@ -52,6 +52,8 @@ tailscale up --login-server http://10.79.40.10:48080 --authkey 40474b6a18d9261c7
 
 > 📝 If you plan to use the `tailscale switch` method explained above, you can add the `--nickname "<account_nickname>"` option to the previous command to give the account a nickname of your choice and facilitate its selection through the _switch_ subcommand. Find an example of usage [here](https://wiki.indie-it.com/wiki/Tailscale#HowTos).
 
+If you encounter issues completing this step (e.g., the execution of the previous command halts), check the **troubleshooting sections below** for [Windows](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/00_headscale.md#troubleshooting-for-windows-users) or [macOS](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/00_headscale.md#troubleshooting-for-macos-users) users. On Linux, everything *just works*. Seriously, why are you still messing with Windows or macOS? :)
+
 After this, your connection to the Headscale server should be up and running! Try to reach your VM or any other on the same subnet to check if the connection works as expected.
 ```bash
 ping <IP_of_your_VM/bastion_VM>
@@ -176,3 +178,152 @@ sudo apt install ./vscode_installer.deb
 ```
 
 After installing VSC, start it by simply typing `code` in the WSL terminal (if a prompt appears, agree to proceed anyway). If this doesn't work the first time, shut down and restart your WSL distro first, as illustrated at the end of the instructions for NoMachine.
+
+---
+
+## Troubleshooting for macOS users
+
+On macOS, the `tailscale up` command described [above](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/00_headscale.md#3-set-up-the-connection-to-the-headscale-server) may **fail to reach the Headscale server when your computer is connected through Politecnico's GlobalProtect VPN**. This is caused by a routing issue between the macOS Tailscale client and the VPN connection. Specifically, outgoing connections initiated by the Tailscale client, though targeting PoliMi IP addresses, won't be redirected through GlobalProtect VPN. As a consequence, any attempt made by the Tailscale client to reach the Headscale server will result in a timeout connection error.
+
+A workaround is to run GlobalProtect VPN on your Mac PC (host) and the Tailscale client inside a Docker container. By doing so, all the connections initiated within the container and directed to PoliMi IP addresses will be transparently routed through the GlobalProtect VPN network interface running on the host (following a NAT—Network Address Translation—mechanism). Thus, the container will connect to Headscale through the VPN, and you will then be able to access your VM through any application (e.g., SSH, VS code, NoMachine) using the container as a jump host. This approach is very similar to the one explained above for Windows using WSL (if you are interested, see more details [here](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/00_headscale.md#a-connect-to-your-vm-through-wsl-an-example-using-visual-studio-code)).
+
+To implement the suggested solution, follow these steps.
+
+1. Install and activate the GlobalProtect VPN connection on your Mac. Ensure that the Bastion VM is reachable before continuing:
+
+   ```bash
+   ping <IP_Bastion_VM>
+   ```
+   E.g.:
+   ```bash
+   ping 10.79.40.10
+   ```
+
+2. Install [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/) and start Docker Desktop. Upon the first execution of the app, you will be asked to register with your personal or work email address. You can skip this step, as this is not required for our current purpose. When Docker Desktop opens, click on the cogwheel on the right of the topbar (or click on the *Settings* tab on the left); then, in the *General* section, activate the option *Start Docker Desktop when you sign in to your computer* and select the button to *Configure shell completions*. Apply the changes.
+
+3. Close any open terminal sessions. Open a new one and check that Docker has been properly installed and is accessible from the terminal:
+
+   ```bash
+   docker --version
+   ```
+
+4. Download the `Dockerfile` and the `start.sh` scripts by cloning this GitHub repository through the terminal (e.g., into the *Downloads* folder):
+
+   ```bash
+   cd $HOME/Downloads
+   git clone https://github.com/pierreali-gerp/server-utilization.git
+   ```
+
+5. Look for the file `start.sh` in the path `server-utilization/00-connectToYourVM/docker_Tailscale` of the downloaded repository, open it with your favorite text editor, and replace the placeholders in the `tailscale up` command with the information provided by your system administrator (see an example in [this previous section](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/00_headscale.md#3-set-up-the-connection-to-the-headscale-server)):
+
+   ```bash
+   tailscale up --login-server http://<IP_Bastion_VM>:<Headscale_server_listening_port> \
+     --authkey <pre-authorized_key_created_for_the_user> \
+     --accept-routes
+   ```
+
+   You should also change `passwordWhatever` in `start.sh` with a good password. This password will be used to connect to the container through SSH. You are advised to use the same password you will set on your your VM to avoid confusion.
+
+   Save the changes and close the file.
+
+6. Within the terminal, move to the directory where you just modified the `start.sh` file and build the Docker image from the provided `Dockerfile`:
+
+   ```bash
+   cd $HOME/Downloads/server-utilization/00-connectToYourVM/docker_Tailscale
+   docker build -t "custom/tailscaleubuntu" ./
+   ```
+   Check the custom image has been properly created:
+   ```bash
+   docker images
+   ```
+
+7. Start the container. The options below are required to automatically restart the container whenever it stops, expose the container SSH service (22) to a specific port on the localhost (40022), provide access to the TUN device used by Tailscale, and grant the networking capabilities required by Tailscale:
+
+   ```bash
+   docker run -d --restart=always --name=tailscaleubuntu \
+     -p 40022:22 \
+     -v /dev/net/tun:/dev/net/tun \
+     --cap-add=NET_ADMIN \
+     --cap-add=NET_RAW \
+     custom/tailscaleubuntu
+   ```
+   Check that the container is running:
+   ```bash
+   docker ps
+   ```
+   If you don't see it with the previous command, run the following to show all the containers that exited (i.e., that were stopped yet not removed) and restart it manually:
+   ```bash
+   docker ps --all
+   docker start tailscaleubuntu
+   ```
+
+   You are advised to **never remove the `tailscaleubuntu` container once created**; otherwise, you may need a new <pre-authorized_key_created_for_the_user> to reconfigure the connection with the Headscale server. If your Tailscale connection stops to work for any reason, first try to stop the container (`docker stop tailscaleubuntu`) and restart it (`docker start tailscaleubuntu`) or reboot your Mac and repeat this procedure.
+
+8. Check that you can reach the container through SSH (127.0.0.1 is the *localhost*):
+
+   ```bash
+   ssh root@127.0.0.1 -p 40022
+   ```
+   Accept the key fingerprint and type the password you previously replaced `passwordWhatever` with.
+
+   Once connected, verify that the Headscale connection is correctly configured and the advertised subnet is reachable:
+   ```bash
+   tailscale status #This should print your device (i.e., this container) on top and possibly
+                    #a list of other devices with the IP addresses they get on the Tailnet
+   ping <IP_of_your_VM/subnet_IP_of_bastion_VM>
+   ```
+   E.g.:
+   ```bash
+   ping 192.168.100.2 #Bastion VM's IP address on the advertised subnet
+   ping headscale.ebrains #Bastion VM's DNS name on the advertised subnet
+   ```
+
+> ⚠️ REMEMBER: Since the connection to Headscale is established inside the Docker container, your macOS applications cannot reach the VMs directly. Thus, to access the VM from your Mac, you need to route the connection through the container—for example, by configuring it as an SSH jump host, as done in the following.
+
+### Connect to your VM through the Docker container
+
+The easiest way to connect to your VM from macOS is to **configure the Docker container as an *SSH jump host***. This approach can also be used to connect the **VS code** app installed on your Mac with the VS code server running on the VM (more details about this kind of connection can be found in the VSC bullet of [this list](https://github.com/pierreali-gerp/server-utilization/blob/main/00-connectToYourVM/01_interactWithYourVM.md#list-of-suggested-tools-to-access-and-work-with-your-vm)).
+
+To set up the SSH jump, add the following lines to the SSH configuration you can find in your Mac at this path: `$HOME/.ssh/config` (to show hidden folders in your home, i.e. those starting with `.`, like `.ssh`, use the `Command + Shift + Period` keyboard combination). If the `config` file doesn't exist, create it (with no extensions). Replace the placeholders in the following with your actual VM details.
+
+```sshconfig
+# ProxyJump through the Docker container connected to Headscale
+Host Local_TailscaleContainer
+  HostName 127.0.0.1
+  Port 40022
+  User root
+
+Host <a_nickname_for_your_VM>
+  HostName <IP_of_your_VM/DNS_name_of_your_VM>
+  User <your_username_on_the_VM>
+  ProxyJump Local_TailscaleContainer
+```
+
+Save the edited file. You can then connect to the VM directly from a macOS terminal with the following command. First you will be prompted with the password of the *root* user of your container, then with the password of your VM's user.
+
+```bash
+ssh <a_nickname_for_your_VM>
+```
+
+### Connect applications running on your Mac to your VM
+
+To connect any application (even those featuring GUIs) running on your Mac to the VM, a simple approach is to forward its TCP port through the SSH jump host.
+
+For example, if the NoMachine client is installed on your Mac, you can connect to the NoMachine server running on the VM by creating a tunnel for a specific port (4001) that goes from your Mac into your container and reaches the NoMachine server on the VM through the Tailscale connection. To create this tunnel, after setting the SSH jump as done above, you can simply run the following command in a macOS terminal:
+
+```bash
+ssh -fN -L 4001:127.0.0.1:4000 <a_nickname_for_your_VM>
+```
+
+We forward the 4001 local port instead of the default one for NoMachine (4000) to avoid potential conflicts with a possible NoMachine server running locally on your Mac.
+
+Then open NoMachine on your Mac and create an NX connection to:
+
+```text
+Host: 127.0.0.1
+Port: 4001
+```
+
+The connection to `127.0.0.1:4001` is forwarded through the Docker container and then to the VM, allowing you to connect to the NoMachine server running on the VM. **Keep the terminal tunnel running while using NoMachine**, i.e., don't close the terminal window in which you ran the above command (actually, closing the terminal might not be an issue if you ran the `ssh` command with `-fN` flags).
+
+This same strategy can be leveraged to connect other TCP-based applications installed on your Mac to any VM reachable through the container.
