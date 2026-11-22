@@ -25,7 +25,7 @@ podman run -v /home/utentetest/Documents/tesi:/tf/tesi -it --rm --device nvidia.
 docker run -u $(id -u):$(id -g) -v /home/utentetest/Documents/tesi:/tf/tesi -it --rm --gpus all tensorflow/tensorflow:2.12.0-gpu
 ```
 
-> ⚠️ If `podman run` fails with an error related to the CDI manifest, this is likely because Nvidia drivers have been updated, but not the CDI manifest. To do so, launch `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`, which will overwrite the previous _nvidia.yaml_ configuration file with an updated version. After this, try to restart the container with the same command: it should work nicely (with no need to reboot).
+> ⚠️ If `podman run` fails with an error related to the CDI manifest, this is likely because Nvidia drivers have been updated, but not the CDI manifest. To do so, launch `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml`, which will overwrite the previous _nvidia.yaml_ configuration file with an updated version. If the installed Podman version is < 5.1.0, add the following flag to the CDI manifest generation command: `--feature-flag no-additional-gids-for-device-nodes` (for details, see [here](https://github.com/NVIDIA/nvidia-container-toolkit/issues/1853#issuecomment-4995027481)). After this, try to restart the container with the same command: it should work nicely (with no need to reboot).
 
 ## Run a container with CPU support only
 
